@@ -1,0 +1,68 @@
+name: Build and Deploy to ECS
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flask boto3
+
+    - name: Run tests
+      run: |
+        # Add your test commands here
+        # For example, you could use pytest if you have tests written
+        # pytest
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Log in to Amazon ECR
+      id: ecr-login
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build, tag, and push image to Amazon ECR
+      run: |
+        # Replace these variables with your own values
+        ECR_REGISTRY=YOUR_ECR_REGISTRY_ID.dkr.ecr.YOUR_REGION.amazonaws.com
+        ECR_REPOSITORY=your-repo
+        IMAGE_TAG=latest
+
+        # Build the Docker image
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+
+        # Push the Docker image to ECR
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+    - name: Update ECS service
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: YOUR_AWS_REGION
+        CLUSTER_NAME: your-cluster-name
+        SERVICE_NAME: your-service-name
+        IMAGE_URL: ${{ steps.ecr-login.outputs.registry }}/your-repo:latest
+      run: |
+        aws ecs update-service \
+          --cluster $CLUSTER_NAME \
+          --service $SERVICE_NAME \
+          --force-new-deployment \
+          --region $AWS_REGION

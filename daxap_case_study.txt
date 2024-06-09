@@ -1,0 +1,11 @@
+DevOps Engineer Case Study
+1. Create an AWS account.
+2. Create a S3 bucket with proper access policies.
+3. Write a simple application containing following HTTP endpoints. You can use any programming language.
+- GET /daxap/list: This endpoint will return objects on the S3 bucket created in step #2.
+- POST /daxap/put: This endpoint will save given JSON data to the S3 bucket and returns the S3 object key.
+- GET /daxap/get/{key}: This endpoint will return content of given key from S3.
+4. Build a docker image for your application with Dockerfile.
+5. Use Github actions to create pipeline to build and test.
+6. Deploy your application to AWS ECS service and configure AWS IAM roles/policies properly. You can use either AWS Fargate or EC2.
+7. Write a README file explaining all details.

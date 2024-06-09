@@ -1,0 +1,48 @@
+`  Go to the AWS Management Console.
+Open the S3 service.
+Click "Create bucket".
+Enter a unique bucket name (e.g., daxap-bucket).
+Select your preferred region.
+Set appropriate access policies:
+Go to the "Permissions" tab.
+Ensure the bucket has public access blocked.
+Add a bucket policy to allow the necessary permissions:`
+
+{
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Sid": "PublicReadGetObjectAccessPolicy", 
+        "Effect": "Allow",
+        "Principal": "*",
+        "Action": [
+          "s3:GetObject",
+          "s3:ListBucket",
+          "s3:PutObject"
+        ],
+        "Resource": [
+          "arn:aws:s3:::task-daxap-case",
+          "arn:aws:s3:::task-daxap-case/*"
+        ]
+      }
+    ]
+}
+
+
+# POST request 
+curl http://127.0.0.1:5000/daxap/list
+
+# PUT Request Response
+curl -X POST http://127.0.0.1:5000/daxap/put -H "Content-Type: application/json" -d '{"name": "test", "value": "example"}'
+
+
+
+# Example Response 
+
+{
+  "key": "e1d8fc17-4f98-4d38-8f92-d8a1e0e2a3e9.json"
+}
+
+
+# GET Request
+curl http://127.0.0.1:5000/daxap/get/< example response" (e1d8fc17-4f98-4d38-8f92-d8a1e0e2a3e9.json) > 
