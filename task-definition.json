@@ -2,7 +2,7 @@
 	"family": "task-definition",
 	"networkMode": "awsvpc",
 	"containerDefinitions": [{
-		"name": "daxap-app",
+		"name": "task-daxap-case",
 		"image": "300886884337.dkr.ecr.us-east-1.amazonaws.com/task-daxap-case:f3be771968146643cc9837e91f6722870e14c648",
 		"portMappings": [{
 			"containerPort": 5000,
