@@ -1,5 +1,5 @@
 {
-	"family": "daxap-task-awscli",
+	"family": "task-definition",
 	"networkMode": "awsvpc",
 	"containerDefinitions": [{
 		"name": "daxap-app",
