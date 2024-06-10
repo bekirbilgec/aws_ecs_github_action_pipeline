@@ -84,7 +84,7 @@ jobs:
 
     - name: Register task definition ECS Service
       run: | 
-          aws ecs register-task-definition --cli-input-json file://clarusshop-task.json
+          aws ecs register-task-definition --cli-input-json file://task-definition.json
     
     - name: Create ECS Cluster
       run: |
