@@ -97,3 +97,7 @@ jobs:
         service: ${{ env.ECS_SERVICE }}
         cluster: ${{ env.ECS_CLUSTER }}
         wait-for-service-stability: true
+    
+    - name: Create ECS Cluster
+      run: |
+          aws ecs create-service --cluster ${{ env.ECS_CLUSTER }} --service-name ${{ env.ECS_SERVICE }} --task-definition ${{ env.ECS_TASK_DEFINITION }} --desired-count 1 --launch-type "FARGATE" --network-configuration "awsvpcConfiguration={subnets=[subnet-0bb50c9a71d234196,subnet-010287ab9d5323b75],securityGroups=[sg-06ecd4a06cc8f7f4c],assignPublicIp=ENABLED}"
