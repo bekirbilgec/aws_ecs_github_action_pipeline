@@ -1,5 +1,5 @@
 {
-	"family": "task-definition.json",
+	"family": "task-definition",
 	"networkMode": "awsvpc",
 	"containerDefinitions": [{
 		"name": "task-daxap-case",
