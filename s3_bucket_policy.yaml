@@ -33,7 +33,7 @@ Add a bucket policy to allow the necessary permissions:`
 curl http://127.0.0.1:5000/daxap/list
 
 # PUT Request Response
-curl -X POST http://127.0.0.1:5000/daxap/put -H "Content-Type: application/json" -d '{"name": "test", "value": "example"}'
+curl -X POST http://54.152.154.201:5000/daxap/put -H "Content-Type: application/json" -d '{"name": "test", "value": "example"}'
 
 
 
