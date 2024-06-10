@@ -1,0 +1,22 @@
+{
+	"family": "daxap-task-awscli",
+	"networkMode": "awsvpc",
+	"containerDefinitions": [{
+		"name": "daxap-app",
+		"image": "[account-ID].dkr.ecr.us-east-1.amazonaws.com/daxap:latest",
+		"portMappings": [{
+			"containerPort": 80,
+			"protocol": "tcp"
+		}],
+		"essential": true
+	}],
+	"requiresCompatibilities": [
+		"FARGATE"
+	],
+	"cpu": "256",
+	"memory": "512",
+      "executionRoleArn": "arn:aws:iam::[account-ID]:role/ecsTaskExecutionRole"
+}
+
+
+
