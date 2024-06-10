@@ -15,8 +15,8 @@
 	],
 	"cpu": "256",
 	"memory": "512",
-	"taskRoleArn": "arn:aws:iam::300886884337:role/ecstaskexecutionrole"
+	"executionRoleArn": "arn:aws:iam::300886884337:role/ecstaskexecutionrole",
+	"taskRoleArn": "arn:aws:iam::300886884337:role/acsaccess3"
       
 
 }
-
