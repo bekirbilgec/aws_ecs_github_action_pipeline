@@ -79,7 +79,6 @@ jobs:
         aws ecr create-repository \
             --repository-name ${{ env.ECR_REPOSITORY }} \
             --region ${{ env.AWS_REGION }} \
-            --image-tag-mutability IMMUTABLE \
             --image-scanning-configuration scanOnPush=false \
 
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
