@@ -3,7 +3,7 @@
 	"networkMode": "awsvpc",
 	"containerDefinitions": [{
 		"name": "task-daxap-case",
-		"image": "300886884337.dkr.ecr.us-east-1.amazonaws.com/task-daxap-case:latest",
+		"image": "300886884337.dkr.ecr.us-east-1.amazonaws.com/task-daxap-case:daxap",
 		"portMappings": [{
 			"containerPort": 5000,
 			"protocol": "tcp"

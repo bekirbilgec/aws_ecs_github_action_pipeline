@@ -32,7 +32,7 @@ on:
 
 env:
   AWS_REGION: us-east-1                             # set this to your preferred AWS region, e.g. us-west-1
-  ECR_REPOSITORY: task-daxap-case                   # set this to your Amazon ECR repository name
+  ECR_REPOSITORY: task-daxap                        # set this to your Amazon ECR repository name
   ECS_SERVICE: first-service                        # set this to your Amazon ECS service name
   ECS_CLUSTER: first-cluster                        # set this to your Amazon ECS cluster name
   ECS_TASK_DEFINITION: task-definition              # set this to the path to your Amazon ECS task definition
@@ -67,7 +67,7 @@ jobs:
       id: build-image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        IMAGE_TAG: latest
+        IMAGE_TAG: daxap
       run: |
         # Create ECR Repository
         # Build a docker container and
