@@ -74,6 +74,8 @@ jobs:
         # push it to ECR so that it can
         # be deployed to ECS.
 
+        aws ecr describe-repositories --region ${{env.AWS_REGION}} --repository-name ${{env.ECR_REPOSITORY}} && \
+                echo "ecr repo already created ${{env.ECR_REPOSITORY}}" || \
         aws ecr create-repository \
             --repository-name ${{ env.ECR_REPOSITORY }} \
             --region ${{ env.AWS_REGION }} \
