@@ -130,3 +130,30 @@ This document provides a guide for creating an AWS S3 bucket and configuring it 
    }
 
 
+
+
+
+
+
+
+
+
+###  
+
+### POST request 
+curl http://127.0.0.1:5000/daxap/list
+
+# PUT Request Response
+curl -X POST http://http://44.198.162.51:5000/daxap/put -H "Content-Type: application/json" -d '{"name": "deneme", "value": "basarili"}'
+
+
+
+# Example Response 
+
+{
+  "key": "e1d8fc17-4f98-4d38-8f92-d8a1e0e2a3e9.json"
+}
+
+
+# GET Request
+curl http://127.0.0.1:5000/daxap/get/< example response" (e1d8fc17-4f98-4d38-8f92-d8a1e0e2a3e9.json) > 
