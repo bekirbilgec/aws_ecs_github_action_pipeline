@@ -90,7 +90,7 @@ jobs:
       run: |
         aws ecs create-cluster --cluster-name ${{ env.ECS_CLUSTER }}
 
-    - name: Register task definition ECS Service
+    - name: Register task definition
       run: | 
           aws ecs register-task-definition --cli-input-json file://task-definition.json
     

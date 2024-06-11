@@ -1,8 +1,6 @@
-# DAXAP - DevOps Engineer Case Study
-
 # Overview
 
-This project involves creating a simple web application with the following features:
+This project involves creating a simple web application writen python with the following features:
 - A REST API to interact with an S3 bucket.
 - A Dockerized application.
 - Automated CI/CD pipeline using GitHub Actions.
@@ -128,6 +126,28 @@ This document provides a guide for creating an AWS S3 bucket and configuring it 
            }
        ]
    }
+# Create Dockerfile 
+
+# Use an official Python runtime as a parent image
+FROM python:3.9-slim
+
+# Set the working directory in the container
+WORKDIR /usr/src/app
+
+# Copy the current directory contents into the container at /usr/src/app
+COPY . .
+
+# Install any needed packages specified in requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Make port 5000 available to the world outside this container
+EXPOSE 5000
+
+# Define environment variable
+ENV FLASK_APP=app.py
+
+# Run app.py when the container launches
+CMD ["flask", "run", "--host=0.0.0.0"]
 
 ## Setting Up GitHub Secrets
 
@@ -142,52 +162,64 @@ Add the following secrets:
    - `AWS_SECRET_ACCESS_KEY`
 
 
-**Create an ECR Repository**:
+* Create an ECR Repository
 Create an Amazon ECR repository to store your images. You can create a repository using following command.
-   ```
-   aws ecr create-repository --repository-name my-ecr-repo --region <use region>
-   ```
 
-**Create ECS Task Definition, Cluster, and Service**:
-   Create an ECS task definition, an ECS cluster, and an ECS service. You can follow the Getting Started guide on the ECS console: [Getting Started with ECS](https://us-east-2.console.aws.amazon.com/ecs/home?region=us-east-2#/firstRun)
-   Replace the value of the `ECS_SERVICE` environment variable in the workflow below with the name you set for the Amazon ECS service. Replace the value of the `ECS_CLUSTER` environment variable in the workflow below with the name you set for the cluster.
-
-**Store ECS Task Definition**:
-   Store your ECS task definition as a JSON file in your repository. The format should follow the output of `aws ecs register-task-definition --generate-cli-skeleton`.
-   Replace the value of the `ECS_TASK_DEFINITION` environment variable in the workflow below with the path to the JSON file. Replace the value of the `CONTAINER_NAME` environment variable in the workflow below with the name of the container in the `containerDefinitions` section of the task definition.
+aws ecr create-repository --repository-name my-ecr-repo --region <use region>
 
 
+* Create ECS Cluster
+   Create an ECS cluster
+ aws ecs create-cluster --cluster-name ${{ env.ECS_CLUSTER }}
 
-## Running the Workflow
+* Task Definition ECS
+aws ecs register-task-definition --cli-input-json file://<task-definition.json>
 
-This workflow will automatically run when you push changes to the `main` branch of your repository. It will:
+{
+	"family": "task-definition",
+	"networkMode": "awsvpc",
+	"containerDefinitions": [{
+		"name": "task-daxap-case",
+		"image": "<accountid>.dkr.ecr.us-east-1.amazonaws.com/task-daxap-case:latest",
+		"portMappings": [{
+			"containerPort": 5000,
+			"protocol": "tcp"
+		}],
+		"essential": true
+	}],
+	"requiresCompatibilities": [
+		"FARGATE"
+	],
+	"cpu": "256",
+	"memory": "512",
+	"executionRoleArn": "arn:aws:iam::300886884337:role/ecstaskexecutionrole",
+	"taskRoleArn": "arn:aws:iam::300886884337:role/acsaccess3"   
+}
 
-1. Checkout your code.
-2. Configure AWS credentials.
-3. Log in to Amazon ECR.
-4. Build, tag, and push the Docker image to Amazon ECR.
-5. Create an ECS cluster (if it does not exist).
-6. Register the ECS task definition.
-7. Create or update the ECS service with the new task definition.
+* Create Service 
+aws ecs create-service --cluster <first-cluster> --service-name <first-service> --task-definition <task-definition> --desired-count 1 --launch-type "FARGATE" --network-configuration "awsvpcConfiguration={subnets=[subnet-077c9758],securityGroups=[sg-e29b36ce],assignPublicIp=ENABLED}"
 
 ## Notes
 
 - Ensure that your ECS task definition JSON file is correctly formatted and placed at the specified path.
 - Make sure the specified subnets and security groups exist in your AWS account and have the necessary configurations.
 - This example assumes the use of AWS Fargate. Adjust the `--launch-type` parameter if you are using EC2 instances for your ECS tasks.
+- securityGroups=[sg-e29b36ce] open the inbound security group port 5000
 ```
 
 Feel free to modify any part of this `README.md` to better fit your project or additional instructions you might need.
+
+After AWS service is running, you can run the following commands. Do not forget to change the IP address.
 
 
 
 ###  
 
 ### POST request 
-curl http://127.0.0.1:5000/daxap/list
+curl http://<PublicIp-address>:5000/daxap/list
 
 # PUT Request Response
-curl -X POST http://http://44.198.162.51:5000/daxap/put -H "Content-Type: application/json" -d '{"name": "deneme", "value": "basarili"}'
+curl -X POST http://<PublicIp-address>:5000/daxap/put -H "Content-Type: application/json" -d '{"name": "deneme", "value": "basarili"}'
 
 
 
@@ -199,29 +231,9 @@ curl -X POST http://http://44.198.162.51:5000/daxap/put -H "Content-Type: applic
 
 
 # GET Request
-curl http://127.0.0.1:5000/daxap/get/< example response" (e1d8fc17-4f98-4d38-8f92-d8a1e0e2a3e9.json) > 
+curl http://<PublicIp-address>:5000/daxap/get/< example response" (e1d8fc17-4f98-4d38-8f92-d8a1e0e2a3e9.json) > 
 
 
-## S3 Bucket Policy 
 
-{
-    "Version": "2012-10-17",
-    "Statement": [
-      {
-        "Sid": "PublicReadGetObjectAccessPolicy", 
-        "Effect": "Allow",
-        "Principal": "*",
-        "Action": [
-          "s3:GetObject",
-          "s3:ListBucket",
-          "s3:PutObject"
-        ],
-        "Resource": [
-          "arn:aws:s3:::task-daxap-case",
-          "arn:aws:s3:::task-daxap-case/*"
-        ]
-      }
-    ]
-} 
 
 
