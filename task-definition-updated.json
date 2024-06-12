@@ -2,8 +2,8 @@
     "family": "task-definition",
     "networkMode": "awsvpc",
     "containerDefinitions": [{
-        "name": "task-daxap-case",
-        "image": "300886884337.dkr.ecr.us-east-1.amazonaws.com/task-daxap-case:${IMAGE_TAG}",
+        "name": "${CONTAINER_NAME}",
+        "image": "${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}",
         "portMappings": [{
             "containerPort": 5000,
             "protocol": "tcp"
@@ -18,4 +18,3 @@
     "executionRoleArn": "arn:aws:iam::300886884337:role/ecstaskexecutionrole",
     "taskRoleArn": "arn:aws:iam::300886884337:role/acsaccess3"
 }
-

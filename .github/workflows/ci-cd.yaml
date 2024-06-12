@@ -81,10 +81,19 @@ jobs:
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
+#    - name: Substitute image tag in task definition
+#      run: |
+#        export IMAGE_TAG=${{ github.sha }}
+#        envsubst < task-definition-updated.json > task-definition.json
+
     - name: Substitute image tag in task definition
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        IMAGE_TAG: ${{ github.sha }}
+        ECR_REPOSITORY: ${{ env.ECR_REPOSITORY }}
+        CONTAINER_NAME: ${{ env.CONTAINER_NAME }}
       run: |
-        export IMAGE_TAG=${{ github.sha }}
-        envsubst < task-definition-updated.json > task-definition.json
+        envsubst < task-definition.json > task-definition-updated.json
 
     - name: Create ECS Cluster
       run: |
