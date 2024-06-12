@@ -92,7 +92,7 @@ jobs:
 
     - name: Register task definition 
       run: | 
-        aws ecs register-task-definition --cli-input-json file://task-definition-updated.json
+        aws ecs register-task-definition --cli-input-json file://task-definition.json
 
     - name: Create Service 
       run: |
