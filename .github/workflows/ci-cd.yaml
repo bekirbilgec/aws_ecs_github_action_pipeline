@@ -93,7 +93,7 @@ jobs:
         ECR_REPOSITORY: ${{ env.ECR_REPOSITORY }}
         CONTAINER_NAME: ${{ env.CONTAINER_NAME }}
       run: |
-        envsubst < task-definition.json > task-definition-updated.json
+        envsubst < task-definition-update.json > task-definition.json
 
     - name: Create ECS Cluster
       run: |
