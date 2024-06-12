@@ -6,8 +6,6 @@ This project involves creating a simple web application writen python with the f
 - Automated CI/CD pipeline using GitHub Actions.
 - Deployment to AWS ECS using Fargate.
 
-## Steps
-
 ## Create AWS account 
 
 # AWS Account Setup and Management
@@ -107,7 +105,7 @@ This document provides a guide for creating an AWS S3 bucket and configuring it 
    - Scroll down to the "Bucket policy" section and click "Edit".
    - Copy and paste the following bucket policy JSON, replacing `your-bucket-name` with the name of your bucket and `your-account-id` with your AWS account ID.
 
-   ```json
+   
    {
        "Version": "2012-10-17",
        "Statement": [
@@ -162,17 +160,17 @@ Add the following secrets:
    - `AWS_SECRET_ACCESS_KEY`
 
 
-* Create an ECR Repository
+# Create an ECR Repository
 Create an Amazon ECR repository to store your images. You can create a repository using following command.
 
 aws ecr create-repository --repository-name my-ecr-repo --region <use region>
 
 
-* Create ECS Cluster
+# Create ECS Cluster
    Create an ECS cluster
  aws ecs create-cluster --cluster-name ${{ env.ECS_CLUSTER }}
 
-* Task Definition ECS
+# Task Definition ECS
 aws ecs register-task-definition --cli-input-json file://<task-definition.json>
 
 {
@@ -196,24 +194,21 @@ aws ecs register-task-definition --cli-input-json file://<task-definition.json>
 	"taskRoleArn": "arn:aws:iam::300886884337:role/acsaccess3"   
 }
 
-* Create Service 
+# Create Service 
 aws ecs create-service --cluster <first-cluster> --service-name <first-service> --task-definition <task-definition> --desired-count 1 --launch-type "FARGATE" --network-configuration "awsvpcConfiguration={subnets=[subnet-077c9758],securityGroups=[sg-e29b36ce],assignPublicIp=ENABLED}"
 
 ## Notes
 
-- Ensure that your ECS task definition JSON file is correctly formatted and placed at the specified path.
-- Make sure the specified subnets and security groups exist in your AWS account and have the necessary configurations.
-- This example assumes the use of AWS Fargate. Adjust the `--launch-type` parameter if you are using EC2 instances for your ECS tasks.
-- securityGroups=[sg-e29b36ce] open the inbound security group port 5000
-```
+ Ensure that your ECS task definition JSON file is correctly formatted and placed at the specified path.
+ Make sure the specified subnets and security groups exist in your AWS account and have the necessary configurations.
+ This example assumes the use of AWS Fargate. Adjust the `--launch-type` parameter if you are using EC2 instances for your ECS tasks.
+ securityGroups=[sg-e29b36ce] open the inbound security group port 5000
+
 
 Feel free to modify any part of this `README.md` to better fit your project or additional instructions you might need.
 
 After AWS service is running, you can run the following commands. Do not forget to change the IP address.
 
-
-
-###  
 
 ### POST request 
 curl http://<PublicIp-address>:5000/daxap/list
@@ -232,6 +227,7 @@ curl -X POST http://<PublicIp-address>:5000/daxap/put -H "Content-Type: applicat
 
 # GET Request
 curl http://<PublicIp-address>:5000/daxap/get/< example response" (e1d8fc17-4f98-4d38-8f92-d8a1e0e2a3e9.json) > 
+
 
 
 
