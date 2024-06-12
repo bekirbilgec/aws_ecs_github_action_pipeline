@@ -67,24 +67,24 @@ jobs:
       id: build-image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        IMAGE_TAG: latest
+        IMAGE_TAG: ${{ github.sha }}
       run: |
-        # Create ECR Repository
-        # Build a docker container and
-        # push it to ECR so that it can
-        # be deployed to ECS.
-
-        aws ecr describe-repositories --region ${{env.AWS_REGION}} --repository-name ${{env.ECR_REPOSITORY}} && \
-                echo "ecr repo already created ${{env.ECR_REPOSITORY}}" || \
+        aws ecr describe-repositories --region ${{ env.AWS_REGION }} --repository-name ${{ env.ECR_REPOSITORY }} && \
+        echo "ecr repo already created ${{ env.ECR_REPOSITORY }}" || \
         aws ecr create-repository \
             --repository-name ${{ env.ECR_REPOSITORY }} \
             --region ${{ env.AWS_REGION }} \
-           --image-tag-mutability IMMUTABLE \
+            --image-tag-mutability IMMUTABLE \
             --image-scanning-configuration scanOnPush=false \
 
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+    - name: Substitute image tag in task definition
+      run: |
+        export IMAGE_TAG=${{ github.sha }}
+        envsubst < task-definition-updated.json > task-definition.json
 
     - name: Create ECS Cluster
       run: |
@@ -92,8 +92,8 @@ jobs:
 
     - name: Register task definition 
       run: | 
-          aws ecs register-task-definition --cli-input-json file://task-definition.json
-    
+        aws ecs register-task-definition --cli-input-json file://task-definition-updated.json
+
     - name: Create Service 
       run: |
-          aws ecs create-service --cluster ${{ env.ECS_CLUSTER }} --service-name ${{ env.ECS_SERVICE }} --task-definition ${{ env.ECS_TASK_DEFINITION }} --desired-count 1 --launch-type "FARGATE" --network-configuration "awsvpcConfiguration={subnets=[subnet-0bb50c9a71d234196,subnet-010287ab9d5323b75],securityGroups=[sg-06ecd4a06cc8f7f4c],assignPublicIp=ENABLED}"
+        aws ecs create-service --cluster ${{ env.ECS_CLUSTER }} --service-name ${{ env.ECS_SERVICE }} --task-definition ${{ env.ECS_TASK_DEFINITION }} --desired-count 1 --launch-type "FARGATE" --network-configuration "awsvpcConfiguration={subnets=[subnet-0bb50c9a71d234196,subnet-010287ab9d5323b75],securityGroups=[sg-06ecd4a06cc8f7f4c],assignPublicIp=ENABLED}"
