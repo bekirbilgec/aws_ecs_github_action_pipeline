@@ -214,7 +214,7 @@ After AWS service is running, you can run the following commands. Do not forget 
 curl http://<PublicIp-address>:5000/daxap/list
 
 # PUT Request Response
-curl -X POST http://<PublicIp-address>:5000/daxap/put -H "Content-Type: application/json" -d '{"name": "deneme", "value": "basarili"}'
+curl -X POST http://44.193.200.166:5000/daxap/put -H "Content-Type: application/json" -d '{"name": "mevlüt", "value": "konya"}'
 
 
 
