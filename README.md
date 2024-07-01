@@ -159,7 +159,7 @@ Add the following secrets:
    - `AWS_ACCESS_KEY_ID`
    - `AWS_SECRET_ACCESS_KEY`
 
-
+# Github Actions Setup yml ##
 # Create an ECR Repository
 Create an Amazon ECR repository to store your images. You can create a repository using following command.
 
